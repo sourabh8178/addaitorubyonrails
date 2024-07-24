@@ -1,0 +1,37 @@
+<h1>AI Quiz Question Generator</h1>
+
+<%= form_with url: quiz_generate_path, method: :post, local: true, id: "quiz-form" do %>
+  <div>
+    <label for="topic">Enter a topic:</label>
+    <%= text_field_tag :topic, nil, id: "topic" %>
+  </div>
+  <div>
+    <%= submit_tag "Generate Question" %>
+  </div>
+<% end %>
+
+<div id="question">
+  <!-- Generated question will be displayed here -->
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("quiz-form");
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const response = await fetch(form.action, {
+        method: form.method,
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          topic: formData.get("topic")
+        })
+      });
+      const data = await response.json();
+      document.getElementById("question").innerText = data.question;
+    });
+  });
+</script>
